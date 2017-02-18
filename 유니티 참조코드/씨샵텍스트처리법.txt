@@ -1,0 +1,148 @@
+C# 텍스트 파일 처리 
+
+C# 에서 텍스트 파일을 읽고 쓰기 위해 가장 많이 쓰는 방법은 (1) StreamReader, StreamWriter 클래스를 사용하는 방법과 (2) File 클래스를 사용하는 방법이 있다.
+
+StreamReader, StreamWriter 클래스는 텍스트 파일을 전문으로 처리하는 기능을 가진 클래스로서, 텍스트 파일을 읽을 때는 StreamReader를, 쓸 때는 StreamWriter를 사용한다.
+
+또한, File 클래스는 텍스트 파일에서 텍스트나 라인들을 간단히 읽거나 쓰기 위한 유틸러티 메서드들을 가지고 있다. 예를 들어, File.ReadAllText() 는 텍스트 파일의 내용을 모두 읽어 string 으로 리턴하는 정적 메서드이며, File.ReadAllLines() 는 텍스트 파일의 각 라인들을 string[] 배열로 리턴하는 메서드이다. 이와 비슷하게 파일을 쓸 때는 File.WriteAllText(), File.WriteAllLines() 를 쓸 수 있다. 
+
+
+StreamReader를 사용한 텍스트 읽기 
+
+StreamReader를 사용해서 텍스트 파일을 읽기 위해서는 먼저 StreamReader 객체를 생성하고, Read(), ReadLine() 등의 메서드를 사용하면 된다. 한 문자 혹은 여러 문자들을 읽기 위해서는 Read() 메서드를 사용하고, 한 라인씩 읽기 위해서는 ReadLine() 메서드를 사용한다.
+
+ReadLine() 은 현재 위치에서 한 라인을 읽어 string 으로 리턴하는데, 만약 파일 끝을 만나면 null 을 리턴한다. Read() 메서드는 파라미터 없이 사용하면 한 문자를 읽게 되며, Read(버퍼, 버퍼시작인덱스, 문자갯수) 와 같이 사용하면 현재 파일 위치부터 지정된 문자갯수만큼 읽어 문자배열 버퍼에 넣게 된다. 
+
+예제
+
+using System;
+using System.IO;
+
+namespace FileApp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        { 
+            string line;
+
+            // 1. 샘플: 텍스트 라인별 읽기
+            // StreamReader 객체를 생성한다. 입력파라미터로 File Path나 파일스트림 사용한다.
+            using (StreamReader rdr = new StreamReader(@"C:\Temp\data.txt"))
+            {
+                // ReadLine()을 써서 한 라인을 읽어 들인다
+                // 만약 파일 끝이면 null 이 리턴된다
+                while ((line = rdr.ReadLine()) != null)
+                {
+                    Console.WriteLine(line);
+                }
+            }
+
+            // 2. 샘플: 텍스트 문자 몇 개만 읽기
+            using (StreamReader rdr = new StreamReader(@"C:\Temp\data.txt"))
+            {
+                // 한 문자 읽기
+                int ch = rdr.Read();
+                Console.Write(ch);
+
+                // 현재 파일 포인터 위치에서 10개 문자를 읽기
+                char[] buffer = new char[10];
+                int readCount = rdr.Read(buffer, 0, 10);
+                Console.WriteLine(buffer);
+            }
+        }
+    }
+}
+
+
+
+StreamWriter를 사용한 텍스트 쓰기 
+
+StreamWriter를 사용해서 텍스트 파일에 문자들을 쓰기 위해서는 먼저 StreamWriter 객체를 생성하고, Write(), WriteLine() 등의 메서드를 사용하면 된다. Write() 혹은 WriteLine() 메서드는 거의 비슷한데, WriteLine() 은 마지막에 NewLine 을 넣는 것이 다르다. Write 메서드는 string 을 입력파라미터로 받을 뿐만 아니라, 거의 모든 타입의 데이타를 입력받을 수 있다. 아래 예제는 Write 메서드에서 문자열과 숫자, 문자배열 등을 입력파라미터로 받아 텍스트 파일에 쓰는 예이다. 
+
+예제
+
+using System;
+using System.IO;
+
+namespace FileApp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        { 
+            // 텍스트 파일 쓰기            
+            // StreamWriter 객체를 생성한다. 입력파라미터로 File Path나 파일스트림 사용한다.
+            using (StreamWriter wr = new StreamWriter(@"C:\Temp\data.txt"))
+            {
+                // WriteLine()을 써서 한 라인씩 문자열을 쓴다.                
+                wr.WriteLine("Line 1");
+                wr.WriteLine("Line 2");
+
+                // 숫자를 쓰기
+                decimal val = 1024.10M;
+                wr.WriteLine(val);
+
+                // 문자배열을 쓰기
+                char[] array = new char[5] { 'A', 'B', 'C', 'D', 'E' };
+                wr.WriteLine(array);
+            }
+
+        }
+    }
+}
+
+
+
+File 클래스에서 텍스트파일 읽고 쓰기 
+
+File 클래스는 개발자의 편리성을 위해 파일을 간단하게 읽고 쓰는 유틸러티성 메서드들을 제공하고 있다.
+
+\ File.ReadAllText(파일명) 메서드는 파일 안의 모든 텍스트를 읽어 string 으로 리턴하고, File.ReadAllLines(파일명) 메서드는 파일 안의 모드 텍스트를 라인별로 읽어 문자열 배열에 리턴한다. 또한, File.ReadLines(파일명)는 라인별로 문자열을 하나씩 리턴하는 IEnumerable<string> 객체를 리턴한다.
+
+텍스트를 쓰는 메서드는 File.WriteAllText(), File.WriteAllLines(), File.AppendAllText(), File.AppendAllLines() 이 있는데, WriteAllText() 는 파일에 문자열을 한꺼번에 쓰고, WriteAllLines() 은 문자열배열을 파일에 한꺼번에 쓴다. WriteAllText() 혹은 WriteAllLines() 메서드는 파일이 이미 있는 경우 이를 지우고 새로 파일을 생성하는 반면, AppendAllText() 혹은 AppendAllLines() 는 파일이 없으면 새로 만들지만 있으면 기존의 파일에 문자 데이타를 뒤에 추가하게 된다. 
+
+예제
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace FileApp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // ###### 텍스트 파일 읽기  ######
+            // 모든 텍스트 한꺼번에 읽기
+            string data = File.ReadAllText(@"C:\Temp\data.txt");
+            Console.WriteLine(data);
+
+            // 모든 라인들을 읽어 문자열 배열에 넣기
+            string[] allLines = File.ReadAllLines(@"C:\Temp\data.txt");
+
+            // 한 라인씩 읽기
+            IEnumerable<string> lines = File.ReadLines(@"C:\Temp\data.txt");
+            foreach(string line in lines)
+            {
+                Console.WriteLine(line);
+            }
+
+
+            // ###### 텍스트 파일 쓰기  ######
+            // 텍스트 파일에 모든 데이타 한꺼번에 쓰기
+            File.WriteAllText("data.out", data);
+
+            //// 텍스트 파일에 문자열배열 라인별로 쓰기
+            string[] arrStr = { "I", "am", "a", "boy" };
+            File.WriteAllLines("data.out", arrStr);
+
+            // 텍스트 파일에 모든 데이타 한꺼번에 추가(append)
+            File.AppendAllText("data.out", data);
+
+            // 텍스트 파일에 문자열배열 한꺼번에 추가(append)
+            File.AppendAllLines("data.out", allLines);           
+        }
+    }
+}
