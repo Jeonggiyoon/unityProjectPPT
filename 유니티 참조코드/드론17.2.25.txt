@@ -1,0 +1,14 @@
+https://www.assetstore.unity3d.com/kr/#!/content/15159   드론 에셋
+
+https://www.assetstore.unity3d.com/kr/#!/content/61781   드론 소리 
+
+https://www.assetstore.unity3d.com/en/#!/content/13001  그라운드 
+
+https://www.assetstore.unity3d.com/en/#!/content/13925   빌딩
+
+https://astoration.gitbooks.io/sihs-shootinggame/content/10c77c_cc28_-_b79c_b364_d558_ac8c_c801_c2a4_d3f0_d.html
+
+
+http://rucya.tistory.com/131 오브젝트 이동 트란슬레이트 
+
+랜덤하게 적스폰하기
